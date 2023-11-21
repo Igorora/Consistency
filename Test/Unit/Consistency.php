@@ -36,13 +36,13 @@ declare(strict_types=1);
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Hoa\Consistency\Test\Unit;
+namespace igorora\Consistency\Test\Unit;
 
-use Hoa\Consistency\Consistency as SUT;
-use Hoa\Test;
+use igorora\Consistency\Consistency as SUT;
+use igorora\Test;
 
 /**
- * Class \Hoa\Consistency\Test\Unit\Consistency.
+ * Class \igorora\Consistency\Test\Unit\Consistency.
  *
  * Test suite of the consistency class.
  *

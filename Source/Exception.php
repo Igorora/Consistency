@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Hoa
  *
@@ -36,16 +34,18 @@ declare(strict_types=1);
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Hoa\Consistency;
+namespace igorora\Consistency;
 
-use RuntimeException;
+use igorora\Exception\Exception as IgororaException;
 
 /**
- * `Hoa\Consistency` cannot use the `Hoa\Exception` library because it would
- * create a cyclic reference. It is not a problem because only few methods or
- * functions throw exceptions. In all cases, an exception from
- * `Hoa\Consistency` is nothing more than a `RuntimeException`.
+ * Class \igorora\Consistency\Exception.
+ *
+ * Extending the Exception class.
+ *
+ * @copyright  Copyright © 2007-2017 Hoa community
+ * @license    New BSD License
  */
-class Exception extends RuntimeException
+class Exception extends IgororaException
 {
 }

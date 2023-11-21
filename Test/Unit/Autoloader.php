@@ -36,10 +36,10 @@ declare(strict_types=1);
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Hoa\Consistency\Test\Unit;
+namespace igorora\Consistency\Test\Unit;
 
-use Hoa\Consistency\Autoloader as SUT;
-use Hoa\Test;
+use igorora\Consistency\Autoloader as SUT;
+use igorora\Test;
 
 /**
  * Test suite of the autoloader.
@@ -144,7 +144,7 @@ class Autoloader extends Test\Unit\Suite
     {
         $this
             ->given(
-                $autoloader = new \Mock\Hoa\Consistency\Autoloader(),
+                $autoloader = new \Mock\igorora\Consistency\Autoloader(),
                 $autoloader->addNamespace('Foo\Bar\\', 'Source/Foo/Bar/'),
                 $this->calling($autoloader)->requireFile = function ($file) {
                     return $file;
@@ -172,7 +172,7 @@ class Autoloader extends Test\Unit\Suite
 
         $this
             ->given(
-                $autoloader = new \Mock\Hoa\Consistency\Autoloader(),
+                $autoloader = new \Mock\igorora\Consistency\Autoloader(),
                 $autoloader->addNamespace('Foo\Bar\\', 'Source/Foo/'),
                 $this->calling($autoloader)->runAutoloaderStack = function ($entity) use ($self, &$called): void {
                     $called = true;
@@ -198,7 +198,7 @@ class Autoloader extends Test\Unit\Suite
 
         $this
             ->given(
-                $autoloader = new \Mock\Hoa\Consistency\Autoloader(),
+                $autoloader = new \Mock\igorora\Consistency\Autoloader(),
                 $this->calling($autoloader)->runAutoloaderStack = function ($entity) use ($self, &$called): void {
                     $called = true;
 
@@ -222,8 +222,8 @@ class Autoloader extends Test\Unit\Suite
 
                 $this->function->file_exists = true,
 
-                $constantName = 'HOA_TEST_' . uniqid(),
-                $filename     = 'hoa://Test/Vfs/Foo?type=file',
+                $constantName = 'IGORORA_TEST_' . uniqid(),
+                $filename     = 'igorora://Test/Vfs/Foo?type=file',
 
                 file_put_contents($filename, '<?php define("' . $constantName . '", "BAR");')
             )
@@ -242,7 +242,7 @@ class Autoloader extends Test\Unit\Suite
                 $autoloader                  = new SUT(),
                 $this->function->file_exists = false
             )
-            ->when($result = $autoloader->requireFile('/hoa/flatland'))
+            ->when($result = $autoloader->requireFile('/igorora/flatland'))
             ->then
                 ->boolean($result)
                     ->isFalse();
@@ -271,7 +271,7 @@ class Autoloader extends Test\Unit\Suite
     public function case_dnew(): void
     {
         $this
-            ->given($classname = 'Hoa\Consistency\Autoloader')
+            ->given($classname = 'igorora\Consistency\Autoloader')
             ->when($result = SUT::dnew($classname))
             ->then
                 ->object($result)

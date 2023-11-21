@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Hoa
  *
@@ -36,48 +34,37 @@ declare(strict_types=1);
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Hoa\Consistency;
+namespace igorora\Consistency;
 
 /**
- * An [autoloader](http://php.net/autoload) is responsible to load symbols at
- * runtime. This autoloader is [PSR-4](http://www.php-fig.org/psr/psr-4/)
- * compliant.
+ * Class igorora\Consistency\Autoloader.
+ *
+ * This class is a PSR-4 compliant autoloader.
+ *
+ * @copyright  Copyright © 2007-2017 Hoa community
+ * @license    New BSD License
  */
 class Autoloader
 {
     /**
      * Namespace prefixes to base directories.
+     *
+     * @var array
      */
     protected $_namespacePrefixesToBaseDirectories = [];
 
+
+
     /**
-     * Adds a base directory for a namespace prefix.
+     * Add a base directory for a namespace prefix.
      *
-     * A namespace prefix must be suffixed by a backslack, otherwise it will
-     * be added. A base directory must suffixed by a directory separator,
-     * otherwise it will be added.
-     *
-     * The base directory is appened to the existing one by default. The last
-     * parameter can be used to prepend it.
-     *
-     * # Examples
-     *
-     * ```php
-     * $prefix         = 'Foo\Bar\\';
-     * $baseDirectoryA = 'Source/Foo/Bar/';
-     * $baseDirectoryB = 'Source/Foo/Baz/';
-     *
-     * $autoloader = new Hoa\Consistency\Autoloader();
-     * $autoloader->addNamespace($prefix, $baseDirectoryA);       // append
-     * $autoloader->addNamespace($prefix, $baseDirectoryB, true); // prepend
-     *
-     * assert($autoloader->hasBaseDirectory($prefix));
-     * assert($autoloader->getBaseDirectories($prefix) === [$baseDirectoryB, $baseDirectoryA]);
-     * ```
-     *
-     * Note the position of the base directories: First `B`, second `A`.
+     * @param   string  $prefix           Namespace prefix.
+     * @param   string  $baseDirectory    Base directory for this prefix.
+     * @param   bool    $prepend          Whether the prefix is prepended or
+     *                                    appended to the prefix' stack.
+     * @return  void
      */
-    public function addNamespace(string $prefix, string $baseDirectory, bool $prepend = false): void
+    public function addNamespace($prefix, $baseDirectory, $prepend = false)
     {
         $prefix        = trim($prefix, '\\') . '\\';
         $baseDirectory = rtrim($baseDirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
@@ -97,30 +84,17 @@ class Autoloader
                 $baseDirectory
             );
         }
+
+        return;
     }
 
     /**
      * Try to load the entity file for a given entity name.
      *
-     * For a given entity `E`, this method will try to find at least one base
-     * directory for its longest to shortest namespace prefix (if `E` is
-     * `X\Y\Z`, then from `X\Y\Z`, to `X\Y`, to `X`). If one is found, then
-     * the entity name `E` is mapped into a filename. If it exists, it is
-     * immediately loaded.
-     *
-     * # Examples
-     *
-     * The `Foo\Bar\Baz\Qux` entity is expected to be found in the
-     * `Source/Foo/Bar/Baz/Qux.php` file. This file will be loaded if it exists.
-     *
-     * ```php,ignore
-     * $autoloader = new Hoa\Consistency\Autoloader();
-     * $autoloader->addNamespace('Foo\Bar\\', 'Source/Foo/Bar/');
-     *
-     * $autoloader->load('Foo\Bar\Baz\Qux');
-     * ```
+     * @param   string  $entity    Entity name to load.
+     * @return  bool
      */
-    public function load(string $entity): ?string
+    public function load($entity)
     {
         $entityPrefix     = $entity;
         $hasBaseDirectory = false;
@@ -146,9 +120,9 @@ class Autoloader
             }
         }
 
-        if (true === $hasBaseDirectory &&
+        if (true    === $hasBaseDirectory &&
             $entity === Consistency::getEntityShortestName($entity) &&
-            false !== $pos = strrpos($entity, '\\')) {
+            false   !== $pos = strrpos($entity, '\\')) {
             return $this->runAutoloaderStack(
                 $entity . '\\' . substr($entity, $pos + 1)
             );
@@ -158,17 +132,12 @@ class Autoloader
     }
 
     /**
-     * Requires a file and returns `true` if it exists, otherwise returns
-     * `false`.
+     * Require a file if exists.
      *
-     * # Examples
-     *
-     * ```php,ignore
-     * $autoloader = new Hoa\Consistency\Autoloader();
-     * $autoloader->requireFile('Source/Foo/Bar/Baz/Qux.php');
-     * ```
+     * @param   string  $filename    File name.
+     * @return  bool
      */
-    public function requireFile(string $filename): bool
+    public function requireFile($filename)
     {
         if (false === file_exists($filename)) {
             return false;
@@ -180,43 +149,23 @@ class Autoloader
     }
 
     /**
-     * A namespace prefix has a base directory if at least one has been
-     * declared with the `addNamespace` method.
+     * Check whether at least one base directory exists for a namespace prefix.
      *
-     * # Examples
-     *
-     * ```php
-     * $autoloader = new Hoa\Consistency\Autoloader();
-     * $autoloader->addNamespace('Foo\Bar\\', 'Source/Foo/Bar/');
-     *
-     * assert(true  === $autoloader->hasBaseDirectory('Foo\Bar\\'));
-     * assert(false === $autoloader->hasBaseDirectory('Baz\Qux\\'));
-     * ```
+     * @param   string  $namespacePrefix    Namespace prefix.
+     * @return  bool
      */
-    public function hasBaseDirectory(string $namespacePrefix): bool
+    public function hasBaseDirectory($namespacePrefix)
     {
         return isset($this->_namespacePrefixesToBaseDirectories[$namespacePrefix]);
     }
 
     /**
-     * Returns the collection of declared base directories for a namespace
-     * prefix.
+     * Get declared base directories for a namespace prefix.
      *
-     * # Examples
-     *
-     * ```php
-     * $prefix         = 'Foo\Bar\\';
-     * $baseDirectoryA = 'Source/Foo/Bar/';
-     * $baseDirectoryB = 'Source/Foo/Baz/';
-     *
-     * $autoloader = new Hoa\Consistency\Autoloader();
-     * $autoloader->addNamespace($prefix, $baseDirectoryA);
-     * $autoloader->addNamespace($prefix, $baseDirectoryB);
-     *
-     * assert($autoloader->getBaseDirectories($prefix) === [$baseDirectoryA, $baseDirectoryB]);
-     * ```
+     * @param   string  $namespacePrefix    Namespace prefix.
+     * @return  array
      */
-    public function getBaseDirectories(string $namespacePrefix): array
+    public function getBaseDirectories($namespacePrefix)
     {
         if (false === $this->hasBaseDirectory($namespacePrefix)) {
             return [];
@@ -226,110 +175,66 @@ class Autoloader
     }
 
     /**
-     * Returns all the classes that are loaded for this runtime.
+     * Get loaded classes.
      *
-     * # Examples
-     *
-     * ```php
-     * assert(in_array(__CLASS__, Hoa\Consistency\Autoloader::getLoadedClasses()));
-     * ```
+     * @return  array
      */
-    public static function getLoadedClasses(): array
+    public static function getLoadedClasses()
     {
         return get_declared_classes();
     }
 
     /**
-     * Calls *all* the registered autoloaders with a specific entity.
+     * Run the entire autoloader stack with a specific entity.
      *
-     * In other words, try to load an entity by using all the registered
-     * autoloaders, not only instances of `Hoa\Consistency\Autoloaders`.
-     *
-     * # Examples
-     *
-     * ```php
-     * $autoloader = new Hoa\Consistency\Autoloader();
-     * $autoloader->runAutoloaderStack('Foo\Bar\Baz');
-     * ```
+     * @param   string  $entity    Entity name to load.
+     * @return  void
      */
-    public function runAutoloaderStack(string $entity): void
+    public function runAutoloaderStack($entity)
     {
-        spl_autoload_call($entity);
+        return spl_autoload_call($entity);
     }
 
     /**
-     * Registers this autoloader instance.
+     * Register the autoloader.
      *
-     * Because the autoloader register is a stack, a new autoloader is
-     * appended. It is possible to prepend it by using the last paramter.
-     *
-     * # Examples
-     *
-     * ```php
-     * assert((new Hoa\Consistency\Autoloader())->register());
-     * ```
-     *
-     * The `addNamespace` method can be called before or after the
-     * registration, it does not matter.
+     * @param   bool  $prepend    Prepend this autoloader to the stack or not.
+     * @return  bool
      */
-    public function register(bool $prepend = false): bool
+    public function register($prepend = false)
     {
         return spl_autoload_register([$this, 'load'], true, $prepend);
     }
 
     /**
-     * Unregisters this autoloader instance.
+     * Unregister the autoloader.
      *
-     * # Examples
-     *
-     * ```php
-     * $autoloader = new Hoa\Consistency\Autoloader();
-     * $autoloader->register();
-     *
-     * assert($autoloader->unregister());
-     * ```
+     * @return  bool
      */
-    public function unregister(): bool
+    public function unregister()
     {
         return spl_autoload_unregister([$this, 'load']);
     }
 
     /**
-     * Returns a copy of the autoloader stack.
+     * Get all registered autoloaders (not only from this library).
      *
-     * Each autoloader in this copy has the form of a callback, i.e. a pair `[instance, method name]`.
-     *
-     * # Examples
-     *
-     * ```php
-     * $autoloader = new Hoa\Consistency\Autoloader();
-     * $autoloader->register();
-     *
-     * assert(in_array([$autoloader, 'load'], $autoloader->getRegisteredAutoloaders()));
-     * ```
+     * @return  array
      */
-    public function getRegisteredAutoloaders(): array
+    public function getRegisteredAutoloaders()
     {
         return spl_autoload_functions();
     }
 
     /**
-     * Allocates a new entity based on its name and a list of arguments.
+     * Dynamic new, a simple factory.
+     * It loads and constructs a class, with provided arguments.
      *
-     * The entity will be automatically loaded if needed. If a constructor is
-     * present, it will be called with the list of arguments.
-     *
-     * # Examples
-     *
-     * ```php
-     * $name      = 'ArrayIterator';
-     * $arguments = [['a', 'b', 'c']];
-     * $iterator  = Hoa\Consistency\Autoloader::dnew($name, $arguments);
-     *
-     * assert($iterator instanceof $name);
-     * ```
+     * @param   bool     $classname    Classname.
+     * @param   array    $arguments    Arguments for the constructor.
+     * @return  object
      */
-    public static function dnew(string $classname, array $arguments = [])
+    public static function dnew($classname, array $arguments = [])
     {
         $classname = ltrim($classname, '\\');
 
@@ -351,5 +256,5 @@ class Autoloader
  * Autoloader.
  */
 $autoloader = new Autoloader();
-$autoloader->addNamespace('Hoa', dirname(__DIR__, 2));
+$autoloader->addNamespace('Hoa', dirname(__DIR__));
 $autoloader->register();

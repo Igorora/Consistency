@@ -36,14 +36,14 @@ declare(strict_types=1);
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Hoa\Consistency\Test\Unit;
+namespace igorora\Consistency\Test\Unit;
 
-use Hoa\Consistency\Exception as SUT;
-use Hoa\Test;
+use igorora\Consistency\Exception as SUT;
+use igorora\Test;
 use RuntimeException;
 
 /**
- * Class \Hoa\Consistency\Test\Unit\Exception.
+ * Class \igorora\Consistency\Test\Unit\Exception.
  *
  * Test suite of the exception.
  *

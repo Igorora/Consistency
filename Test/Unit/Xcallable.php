@@ -36,12 +36,12 @@ declare(strict_types=1);
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Hoa\Consistency\Test\Unit;
+namespace igorora\Consistency\Test\Unit;
 
 use Error;
-use Hoa\Consistency as LUT;
-use Hoa\Consistency\Xcallable as SUT;
-use Hoa\Test;
+use igorora\Consistency as LUT;
+use igorora\Consistency\Xcallable as SUT;
+use igorora\Test;
 use ReflectionClass;
 use ReflectionFunction;
 use ReflectionMethod;
@@ -169,7 +169,7 @@ class Xcallable extends Test\Unit\Suite
                 ->object($reflection = $result->getReflection())
                     ->isInstanceOf(ReflectionFunction::class)
                 ->string($reflection->getName())
-                    ->isEqualTo('Hoa\Consistency\Test\Unit\{closure}');
+                    ->isEqualTo('igorora\Consistency\Test\Unit\{closure}');
     }
 
     public function case_form_array_of_class_method(): void
@@ -225,7 +225,7 @@ class Xcallable extends Test\Unit\Suite
     {
         $this
             ->exception(function (): void {
-                new SUT('__hoa_test_undefined_function__');
+                new SUT('__igorora_test_undefined_function__');
             })
                 ->isInstanceOf(Error::class);
     }
@@ -276,7 +276,7 @@ class Xcallable extends Test\Unit\Suite
     {
         $this
             ->given(
-                $stream    = new \Mock\Hoa\Stream\IStream\Out(),
+                $stream    = new \Mock\igorora\Stream\IStream\Out(),
                 $arguments = [$argument],
                 $xcallable = new SUT($stream)
             )
